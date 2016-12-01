@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SimpleScheduler.ConsoleTests</RootNamespace>
     <AssemblyName>SimpleScheduler.ConsoleTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,6 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleScheduler.Jobs\SimpleScheduler.Jobs.csproj">
+      <Project>{8ff960be-7941-43ff-94e4-ae703dd5b882}</Project>
+      <Name>SimpleScheduler.Jobs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SimpleScheduler\SimpleScheduler.csproj">
+      <Project>{8db4326d-6352-42bf-8776-b168b04904ca}</Project>
+      <Name>SimpleScheduler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

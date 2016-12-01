@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,7 +11,7 @@ namespace SimpleScheduler
 {
     public class JobManager
     {
-        private ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
+        private readonly ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
         private IEnumerable<JobInfo> _listOfJobInfo;
 
@@ -18,7 +19,23 @@ namespace SimpleScheduler
 
         public JobManager()
         {
+            var schedulerConfigSection = ConfigurationManager.GetSection("schedulerConfig");
 
+            var configSection = schedulerConfigSection as SchedulerConfigSection;
+            if (configSection != null)
+            {
+                _listOfJobInfo =
+                    configSection.Jobs.Select(
+                        jobConfig =>
+                            new JobInfo(jobConfig.Name, jobConfig.Enabled, true, jobConfig.StopOnError,
+                                jobConfig.Seconds, jobConfig.Type));
+
+            }
+        }
+
+        public JobManager(IEnumerable<JobInfo> listOfJobInfo)
+        {
+            if (listOfJobInfo != null) _listOfJobInfo = listOfJobInfo;
         }
 
         public void ExecuteAllJobs()

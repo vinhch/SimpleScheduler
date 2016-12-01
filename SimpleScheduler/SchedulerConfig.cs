@@ -1,30 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Configuration;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace SimpleScheduler
 {
-    public class SchedulerConfigSection : ConfigurationSection
-    {
-        private const string ELEMENT_NAME_JOB = "job";
-
-        private readonly XmlSerializer _objectSerializer = new XmlSerializer(typeof(SchedulerConfigJob));
-
-        public IList<SchedulerConfigJob> Jobs { get; private set; } = new List<SchedulerConfigJob>();
-
-        protected override bool OnDeserializeUnrecognizedElement(string elementName, XmlReader reader)
-        {
-            if (!elementName.Equals(ELEMENT_NAME_JOB, StringComparison.Ordinal))
-                return base.OnDeserializeUnrecognizedElement(elementName, reader);
-
-            Jobs.Add(_objectSerializer.Deserialize(reader) as SchedulerConfigJob);
-            return true;
-        }
-    }
-
     /// <remarks/>
     [Serializable]
     [DesignerCategory("code")]
@@ -47,6 +26,31 @@ namespace SimpleScheduler
             set
             {
                 jobsField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [Serializable]
+    [DesignerCategory("code")]
+    [XmlType(AnonymousType = true)]
+    [XmlRoot("jobs", Namespace = "", IsNullable = false)]
+    public partial class SchedulerConfigJobs
+    {
+
+        private SchedulerConfigJob[] jobField;
+
+        /// <remarks/>
+        [XmlElement("job")]
+        public SchedulerConfigJob[] Job
+        {
+            get
+            {
+                return this.jobField;
+            }
+            set
+            {
+                this.jobField = value;
             }
         }
     }

@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace SimpleScheduler.Jobs
 {
-    public class Class1
+    public class Test : IJob
     {
+        public void Execute()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

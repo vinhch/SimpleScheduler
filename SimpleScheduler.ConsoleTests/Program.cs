@@ -10,6 +10,9 @@ namespace SimpleScheduler.ConsoleTests
     {
         static void Main(string[] args)
         {
+            var jobManager = new JobManager();
+            jobManager.ExecuteAllJobs();
+
         }
     }
 }

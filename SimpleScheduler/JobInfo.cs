@@ -10,11 +10,11 @@ namespace SimpleScheduler
 {
     public class JobInfo
     {
-        private ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
+        private readonly ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
         public string Name { get; }
 
-        public bool Enabled { get; } = false;
+        public bool Enabled { get; private set; }
 
         public bool Repeatable { get; } = true;
 
@@ -34,24 +34,32 @@ namespace SimpleScheduler
 
             //var type = Type.GetType($"{Name}, SimpleScheduler.Jobs");
             var type = Type.GetType(JobType);
-            if (!IsRealJobClass(type)) return null;
+
+            if (!IsRealJobClass(type))
+            {
+                Enabled = false;
+                return null;
+            }
 
             _objectType = type;
             return _objectType;
         }
 
-        public static bool IsRealJobClass(Type testType)
+        private static bool IsRealJobClass(Type testType)
         {
-            return testType.IsAbstract == false
+            return testType != null
+                && testType.IsAbstract == false
                 && testType.IsGenericTypeDefinition == false
                 && testType.IsInterface == false
-                && testType.IsAssignableFrom(typeof(IJob));
+                && testType.GetInterface(nameof(IJob)) != null;
         }
 
         private IJob _instanceJob;
 
         public void ExecuteJob()
         {
+            if (!Enabled) return;
+
             var type = GetJobObjectType();
 
             if (type == null)
@@ -84,7 +92,7 @@ namespace SimpleScheduler
                         _logger.Error($"The Job \"{Name}\" could not be executed, throwing an exception.", ex);
                     }
 
-                    Thread.Sleep(RepetitionIntervalTime);
+                    Thread.Sleep(RepetitionIntervalTime*1000);
                 }
             }
             else
@@ -98,6 +106,18 @@ namespace SimpleScheduler
                     _logger.Error($"The Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                 }
             }
+        }
+
+        public JobInfo() { }
+        public JobInfo(string name, bool enabled, bool repeatable,
+            bool stopOnError, int repetitionIntervalTime, string jobType)
+        {
+            Name = name;
+            Enabled = enabled;
+            Repeatable = repeatable;
+            StopOnError = stopOnError;
+            RepetitionIntervalTime = repetitionIntervalTime;
+            JobType = jobType;
         }
     }
 }

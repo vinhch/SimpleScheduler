@@ -51,6 +51,7 @@
     <Compile Include="JobManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SchedulerConfig.cs" />
+    <Compile Include="SchedulerConfigSection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
