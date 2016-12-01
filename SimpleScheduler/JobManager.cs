@@ -22,10 +22,16 @@ namespace SimpleScheduler
                 return;
             }
 
-            foreach (var jobInfo in _listOfJobInfo)
+            //foreach (var jobInfo in _listOfJobInfo)
+            //{
+            //    var jobThread = new Thread(new ThreadStart(jobInfo.ExecuteJob));
+            //}
+
+            Parallel.ForEach(_listOfJobInfo.Where(s => s.Enabled), jobInfo =>
             {
                 var jobThread = new Thread(new ThreadStart(jobInfo.ExecuteJob));
-            }
+                jobThread.Start();
+            });
         }
 
 
