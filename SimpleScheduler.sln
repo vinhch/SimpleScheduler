@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler", "SimpleSc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler.Jobs", "SimpleScheduler.Jobs\SimpleScheduler.Jobs.csproj", "{8FF960BE-7941-43FF-94E4-AE703DD5B882}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler.ConsoleTests", "SimpleScheduler.ConsoleTests\SimpleScheduler.ConsoleTests.csproj", "{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8FF960BE-7941-43FF-94E4-AE703DD5B882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FF960BE-7941-43FF-94E4-AE703DD5B882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FF960BE-7941-43FF-94E4-AE703DD5B882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

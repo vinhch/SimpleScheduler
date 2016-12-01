@@ -1,43 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace SimpleScheduler
 {
+    public class SchedulerConfigSection : ConfigurationSection
+    {
+        private const string ELEMENT_NAME_JOB = "job";
+
+        private readonly XmlSerializer _objectSerializer = new XmlSerializer(typeof(SchedulerConfigJob));
+
+        public IList<SchedulerConfigJob> Jobs { get; private set; } = new List<SchedulerConfigJob>();
+
+        protected override bool OnDeserializeUnrecognizedElement(string elementName, XmlReader reader)
+        {
+            if (!elementName.Equals(ELEMENT_NAME_JOB, StringComparison.Ordinal))
+                return base.OnDeserializeUnrecognizedElement(elementName, reader);
+
+            Jobs.Add(_objectSerializer.Deserialize(reader) as SchedulerConfigJob);
+            return true;
+        }
+    }
+
     /// <remarks/>
-    [System.SerializableAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute("schedulerConfig", Namespace = "", IsNullable = false)]
-    public partial class SchedulerConfig
+    [Serializable]
+    [DesignerCategory("code")]
+    [XmlType(AnonymousType = true)]
+    [XmlRoot("schedulerConfig", Namespace = "", IsNullable = false)]
+    public class SchedulerConfig
     {
 
         private SchedulerConfigJob[] jobsField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute("jobs")]
-        [System.Xml.Serialization.XmlArrayItemAttribute("job", IsNullable = false)]
+        [XmlArray("jobs")]
+        [XmlArrayItem("job", IsNullable = false)]
         public SchedulerConfigJob[] Jobs
         {
             get
             {
-                return this.jobsField;
+                return jobsField;
             }
             set
             {
-                this.jobsField = value;
+                jobsField = value;
             }
         }
     }
 
     /// <remarks/>
-    [System.SerializableAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    public partial class SchedulerConfigJob
+    [Serializable]
+    [DesignerCategory("code")]
+    [XmlType(AnonymousType = true)]
+    [XmlRoot("job", Namespace = "", IsNullable = false)]
+    public class SchedulerConfigJob
     {
 
         private string nameField;
@@ -51,72 +70,72 @@ namespace SimpleScheduler
         private int secondsField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute("name")]
+        [XmlAttribute("name")]
         public string Name
         {
             get
             {
-                return this.nameField;
+                return nameField;
             }
             set
             {
-                this.nameField = value;
+                nameField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute("type")]
+        [XmlAttribute("type")]
         public string Type
         {
             get
             {
-                return this.typeField;
+                return typeField;
             }
             set
             {
-                this.typeField = value;
+                typeField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute("enabled")]
+        [XmlAttribute("enabled")]
         public bool Enabled
         {
             get
             {
-                return this.enabledField;
+                return enabledField;
             }
             set
             {
-                this.enabledField = value;
+                enabledField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute("stopOnError")]
+        [XmlAttribute("stopOnError")]
         public bool StopOnError
         {
             get
             {
-                return this.stopOnErrorField;
+                return stopOnErrorField;
             }
             set
             {
-                this.stopOnErrorField = value;
+                stopOnErrorField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute("seconds")]
+        [XmlAttribute("seconds")]
         public int Seconds
         {
             get
             {
-                return this.secondsField;
+                return secondsField;
             }
             set
             {
-                this.secondsField = value;
+                secondsField = value;
             }
         }
     }
