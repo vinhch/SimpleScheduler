@@ -109,6 +109,7 @@ namespace SimpleScheduler
         }
 
         public JobInfo() { }
+
         public JobInfo(string name, bool enabled, bool repeatable,
             bool stopOnError, int repetitionIntervalTime, string jobType)
         {

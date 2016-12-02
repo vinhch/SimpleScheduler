@@ -73,6 +73,5 @@ namespace SimpleScheduler
 
             _logger.Debug("End Scheduler");
         }
-
     }
 }

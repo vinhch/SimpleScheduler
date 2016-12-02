@@ -12,7 +12,6 @@ namespace SimpleScheduler.ConsoleTests
         {
             var jobManager = new JobManager();
             jobManager.ExecuteAllJobs();
-
         }
     }
 }
