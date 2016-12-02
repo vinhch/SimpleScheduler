@@ -12,7 +12,7 @@ namespace SimpleScheduler
     {
         private readonly ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
-        public string Name { get; }
+        public string Name { get; } = "Unknow";
 
         public bool Enabled { get; private set; }
 
@@ -113,11 +113,12 @@ namespace SimpleScheduler
         public JobInfo(string name, bool enabled, bool repeatable,
             bool stopOnError, int repetitionIntervalTime, string jobType)
         {
-            Name = name;
+            if (!string.IsNullOrWhiteSpace(name)) Name = name;
+            if (repetitionIntervalTime > 0) RepetitionIntervalTime = repetitionIntervalTime;
+
             Enabled = enabled;
             Repeatable = repeatable;
             StopOnError = stopOnError;
-            RepetitionIntervalTime = repetitionIntervalTime;
             JobType = jobType;
         }
     }
