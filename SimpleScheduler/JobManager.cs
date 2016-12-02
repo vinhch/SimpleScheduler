@@ -11,7 +11,7 @@ namespace SimpleScheduler
 {
     public class JobManager
     {
-        private readonly ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
+        private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
         private IEnumerable<JobInfo> _listOfJobInfo;
 
@@ -27,8 +27,8 @@ namespace SimpleScheduler
                 _listOfJobInfo =
                     configSection.Jobs.Select(
                         jobConfig =>
-                            new JobInfo(jobConfig.Name, jobConfig.Enabled, true, jobConfig.StopOnError,
-                                jobConfig.Seconds, jobConfig.Type));
+                            new JobInfo(jobConfig.Name, jobConfig.Enabled, jobConfig.Logging, true,
+                                jobConfig.StopOnError, jobConfig.Seconds, jobConfig.Type));
 
             }
         }
@@ -40,7 +40,7 @@ namespace SimpleScheduler
 
         public void ExecuteAllJobs()
         {
-            _logger.Debug("Begin Scheduler");
+            _log.Debug("Begin Scheduler");
 
             if (_listOfJobInfo == null || !_listOfJobInfo.Any())
             {
@@ -56,7 +56,7 @@ namespace SimpleScheduler
             {
                 try
                 {
-                    _logger.Info($"Instantiating job \"{jobInfo.Name}\", Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
+                    _log.Info($"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
 
                     _mainThread = new Thread(jobInfo.ExecuteJob);
 
@@ -67,11 +67,11 @@ namespace SimpleScheduler
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"Job \"{jobInfo.Name}\" could not be instantiated or executed.", ex);
+                    _log.Error($"Job \"{jobInfo.Name}\" could not be instantiated or executed.", ex);
                 }
             });
 
-            _logger.Debug("End Scheduler");
+            _log.Debug("End Scheduler");
         }
     }
 }

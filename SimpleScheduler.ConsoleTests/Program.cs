@@ -10,12 +10,12 @@ namespace SimpleScheduler.ConsoleTests
 {
     class Program
     {
-        private static readonly ILog _logger =
+        private static readonly ILog _log =
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         static void Main(string[] args)
         {
-            _logger.Info($"Running as {WindowsIdentity.GetCurrent().Name}");
+            _log.Info($"Running as {WindowsIdentity.GetCurrent().Name}");
 
             var jobManager = new JobManager();
             jobManager.ExecuteAllJobs();

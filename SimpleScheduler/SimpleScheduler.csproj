@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Constants.cs" />
+    <Compile Include="Config\NullLog.cs" />
     <Compile Include="JobInfo.cs" />
     <Compile Include="IJob.cs" />
     <Compile Include="JobManager.cs" />

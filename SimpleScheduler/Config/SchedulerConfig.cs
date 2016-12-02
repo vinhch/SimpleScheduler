@@ -71,6 +71,8 @@ namespace SimpleScheduler
 
         private bool stopOnErrorField;
 
+        private bool loggingField;
+
         private int secondsField;
 
         /// <remarks/>
@@ -126,6 +128,20 @@ namespace SimpleScheduler
             set
             {
                 stopOnErrorField = value;
+            }
+        }
+
+        /// <remarks/>
+        [XmlAttribute("logging")]
+        public bool Logging
+        {
+            get
+            {
+                return loggingField;
+            }
+            set
+            {
+                loggingField = value;
             }
         }
 

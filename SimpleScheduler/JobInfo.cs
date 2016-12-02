@@ -10,11 +10,22 @@ namespace SimpleScheduler
 {
     public class JobInfo
     {
-        private readonly ILog _logger = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
+        private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
+
+        private ILog Log
+        {
+            get
+            {
+                if (LogEnabled) return _log;
+                return NullLog.GetNullLog();
+            }
+        }
 
         public string Name { get; } = "Unknow";
 
         public bool Enabled { get; private set; }
+
+        public bool LogEnabled { get; private set; }
 
         public bool Repeatable { get; } = true;
 
@@ -64,7 +75,7 @@ namespace SimpleScheduler
 
             if (type == null)
             {
-                _logger.Error($"Job \"{Name}\" cannot be instantiated.");
+                Log.Error($"Job \"{Name}\" cannot be instantiated.");
                 return;
             }
 
@@ -75,7 +86,7 @@ namespace SimpleScheduler
             {
                 while (true)
                 {
-                    _logger.Info($"Start job \"{Name}\".");
+                    Log.Info($"Start job \"{Name}\".");
 
                     try
                     {
@@ -85,11 +96,11 @@ namespace SimpleScheduler
                     {
                         if (StopOnError)
                         {
-                            _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
+                            Log.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                             return;
                         }
 
-                        _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
+                        Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
                     }
 
                     Thread.Sleep(RepetitionIntervalTime*1000);
@@ -103,20 +114,21 @@ namespace SimpleScheduler
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
+                    Log.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                 }
             }
         }
 
         public JobInfo() { }
 
-        public JobInfo(string name, bool enabled, bool repeatable,
+        public JobInfo(string name, bool enabled, bool logEnabled, bool repeatable,
             bool stopOnError, int repetitionIntervalTime, string jobType)
         {
             if (!string.IsNullOrWhiteSpace(name)) Name = name;
             if (repetitionIntervalTime > 0) RepetitionIntervalTime = repetitionIntervalTime;
 
             Enabled = enabled;
+            LogEnabled = logEnabled;
             Repeatable = repeatable;
             StopOnError = stopOnError;
             JobType = jobType;
