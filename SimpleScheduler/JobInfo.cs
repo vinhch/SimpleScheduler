@@ -64,7 +64,7 @@ namespace SimpleScheduler
 
             if (type == null)
             {
-                _logger.Error($"The Job \"{Name}\" cannot be instantiated.");
+                _logger.Error($"Job \"{Name}\" cannot be instantiated.");
                 return;
             }
 
@@ -85,11 +85,11 @@ namespace SimpleScheduler
                     {
                         if (StopOnError)
                         {
-                            _logger.Error($"The Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
+                            _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                             return;
                         }
 
-                        _logger.Error($"The Job \"{Name}\" could not be executed, throwing an exception.", ex);
+                        _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
                     }
 
                     Thread.Sleep(RepetitionIntervalTime*1000);
@@ -103,7 +103,7 @@ namespace SimpleScheduler
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"The Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
+                    _logger.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                 }
             }
         }

@@ -56,7 +56,7 @@ namespace SimpleScheduler
             {
                 try
                 {
-                    _logger.Info($"The Job \"{jobInfo.Name}\", Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
+                    _logger.Info($"Instantiating job \"{jobInfo.Name}\", Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
 
                     _mainThread = new Thread(jobInfo.ExecuteJob);
 
@@ -67,7 +67,7 @@ namespace SimpleScheduler
                 }
                 catch (Exception ex)
                 {
-                    _logger.Error($"The Job \"{jobInfo.Name}\" could not be instantiated or executed.", ex);
+                    _logger.Error($"Job \"{jobInfo.Name}\" could not be instantiated or executed.", ex);
                 }
             });
 
