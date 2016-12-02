@@ -11,13 +11,13 @@ namespace SimpleScheduler
     // using Null Object pattern
     public class NullLog : ILog
     {
-        private static NullLog _nullLog;
+        private static NullLog _nullLogInstance;
         public static NullLog GetNullLog()
         {
-            if (_nullLog == null)
-                _nullLog = new NullLog();
+            if (_nullLogInstance == null)
+                _nullLogInstance = new NullLog();
 
-            return _nullLog;
+            return _nullLogInstance;
         }
 
         #region Implement empty properties and methods
