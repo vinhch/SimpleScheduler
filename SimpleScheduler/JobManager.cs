@@ -56,7 +56,7 @@ namespace SimpleScheduler
             {
                 try
                 {
-                    _logger.Info($"The Job \"{jobInfo.Name}\".");
+                    _logger.Info($"The Job \"{jobInfo.Name}\", Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
 
                     _mainThread = new Thread(jobInfo.ExecuteJob);
 
