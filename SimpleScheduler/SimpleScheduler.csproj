@@ -45,13 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="Config\Constants.cs" />
     <Compile Include="JobInfo.cs" />
     <Compile Include="IJob.cs" />
     <Compile Include="JobManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SchedulerConfig.cs" />
-    <Compile Include="SchedulerConfigSection.cs" />
+    <Compile Include="Config\SchedulerConfig.cs" />
+    <Compile Include="Config\SchedulerConfigSection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
