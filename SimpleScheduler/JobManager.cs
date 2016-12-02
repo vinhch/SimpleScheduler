@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using log4net;
@@ -46,11 +45,6 @@ namespace SimpleScheduler
             {
                 return;
             }
-
-            //foreach (var jobInfo in _listOfJobInfo)
-            //{
-            //    var jobThread = new Thread(new ThreadStart(jobInfo.ExecuteJob));
-            //}
 
             Parallel.ForEach(_listOfJobInfo.Where(s => s.Enabled), jobInfo =>
             {

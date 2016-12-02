@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using log4net;
 
 namespace SimpleScheduler
@@ -103,7 +99,7 @@ namespace SimpleScheduler
                         Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
                     }
 
-                    Thread.Sleep(RepetitionIntervalTime*1000);
+                    Thread.Sleep(RepetitionIntervalTime * 1000);
                 }
             }
             else
