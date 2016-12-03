@@ -27,7 +27,7 @@ namespace SimpleScheduler
 
         public bool StopOnError { get; } = true;
 
-        public int RepetitionIntervalTime { get; }
+        public int RepetitionIntervalTime { get; private set; }
 
         public string TimeSchedule { get; } = "None";
 
@@ -35,18 +35,20 @@ namespace SimpleScheduler
 
         private DateTime? GetTimeSchedule(DateTime now)
         {
-            if (_timeSchedule == null)
-            {
-                if (string.IsNullOrWhiteSpace(TimeSchedule)) return null;
+            if (string.IsNullOrWhiteSpace(TimeSchedule)) return null;
 
-                DateTime time;
-                if (!DateTime.TryParse(TimeSchedule, out time)) return null;
+            if (_timeSchedule != null)
+                return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour,
+                    _timeSchedule.Value.Minute, _timeSchedule.Value.Second);
 
-                _timeSchedule = time;
-            }
+            DateTime time;
+            if (!DateTime.TryParse(TimeSchedule, out time)) return null;
 
-            return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour, _timeSchedule.Value.Minute,
-                _timeSchedule.Value.Second);
+            _timeSchedule = time;
+            if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1;
+
+            return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour,
+                _timeSchedule.Value.Minute, _timeSchedule.Value.Second);
         }
 
         private string JobType { get; }
@@ -55,9 +57,9 @@ namespace SimpleScheduler
 
         private Type GetJobObjectType()
         {
-            if (_objectType != null) return _objectType;
-
             if (string.IsNullOrWhiteSpace(JobType)) return null;
+
+            if (_objectType != null) return _objectType;
 
             //var type = Type.GetType($"{Name}, SimpleScheduler.Jobs");
             var type = Type.GetType(JobType);
@@ -88,7 +90,6 @@ namespace SimpleScheduler
             if (!Enabled) return;
 
             var type = GetJobObjectType();
-
             if (type == null)
             {
                 Log.Error($"Job \"{Name}\" cannot be instantiated.");
@@ -96,35 +97,32 @@ namespace SimpleScheduler
             }
 
             if (_jobInstance == null)
-                _jobInstance = Activator.CreateInstance(GetJobObjectType()) as IJob;
+                _jobInstance = Activator.CreateInstance(type) as IJob;
 
-            if (Repeatable)
+            while (Repeatable)
             {
-                while (true)
+                var now = DateTime.Now;
+
+                var timeSchedule = GetTimeSchedule(now);
+                if (timeSchedule == null)
                 {
-                    var now = DateTime.Now;
-                    var repetitionIntervalTime = RepetitionIntervalTime;
-
-                    var timeSchedule = GetTimeSchedule(now);
-                    if (timeSchedule == null)
-                        if (!ExecuteJobAndContinue()) return;
-                    else
-                    {
-                        if (repetitionIntervalTime < 1) repetitionIntervalTime = 1;
-
-                        var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
-
-                        if (0 <= difference.TotalSeconds && difference.TotalSeconds < repetitionIntervalTime)
-                            if (!ExecuteJobAndContinue()) return;
-                    }
-
-                    Thread.Sleep(repetitionIntervalTime * 1000);
+                    if (!ExecuteJobAndContinue()) return;
                 }
+                else
+                {
+                    var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
+
+                    if (0 <= difference.TotalSeconds && difference.TotalSeconds < RepetitionIntervalTime)
+                    {
+                        if (!ExecuteJobAndContinue()) return;
+                    }
+                }
+
+                Thread.Sleep(RepetitionIntervalTime * 1000);
             }
-            else
-            {
-                ExecuteJobAndContinue();
-            }
+
+            // else !Repeatable
+            ExecuteJobAndContinue();
         }
 
         private bool ExecuteJobAndContinue()
