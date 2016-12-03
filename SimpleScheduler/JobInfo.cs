@@ -83,7 +83,7 @@ namespace SimpleScheduler
 
         private IJob _jobInstance;
 
-        public void ExecuteJob()
+        public void InitializeSchedule()
         {
             if (!Enabled) return;
 
@@ -105,35 +105,17 @@ namespace SimpleScheduler
                     var now = DateTime.Now;
                     var repetitionIntervalTime = RepetitionIntervalTime;
 
-                    try
+                    var timeSchedule = GetTimeSchedule(now);
+                    if (timeSchedule == null)
+                        if (!ExecuteJobAndContinue()) return;
+                    else
                     {
-                        var timeSchedule = GetTimeSchedule(now);
-                        if (timeSchedule == null)
-                        {
-                            Log.Info($"Start job \"{Name}\".");
-                            _jobInstance.Execute();
-                        }
-                        else
-                        {
-                            if (repetitionIntervalTime < 1) repetitionIntervalTime = 1;
+                        if (repetitionIntervalTime < 1) repetitionIntervalTime = 1;
 
-                            var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
-                            if (0 <= difference.TotalSeconds && difference.TotalSeconds < repetitionIntervalTime)
-                            {
-                                Log.Info($"Start job \"{Name}\".");
-                                _jobInstance.Execute();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        if (StopOnError)
-                        {
-                            Log.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
-                            return;
-                        }
+                        var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
 
-                        Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
+                        if (0 <= difference.TotalSeconds && difference.TotalSeconds < repetitionIntervalTime)
+                            if (!ExecuteJobAndContinue()) return;
                     }
 
                     Thread.Sleep(repetitionIntervalTime * 1000);
@@ -141,15 +123,29 @@ namespace SimpleScheduler
             }
             else
             {
-                try
-                {
-                    _jobInstance.Execute();
-                }
-                catch (Exception ex)
+                ExecuteJobAndContinue();
+            }
+        }
+
+        private bool ExecuteJobAndContinue()
+        {
+            try
+            {
+                Log.Info($"Start job \"{Name}\".");
+                _jobInstance.Execute();
+            }
+            catch (Exception ex)
+            {
+                if (StopOnError)
                 {
                     Log.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
+                    return false;
                 }
+
+                Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
             }
+
+            return true;
         }
 
         public JobInfo() { }

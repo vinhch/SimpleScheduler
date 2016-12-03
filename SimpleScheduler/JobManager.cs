@@ -38,7 +38,7 @@ namespace SimpleScheduler
             if (listOfJobInfo != null) _listOfJobInfo = listOfJobInfo;
         }
 
-        public void ExecuteAllJobs()
+        public void InitializeAllJobSchedules()
         {
             _log.Debug("Begin Scheduler");
 
@@ -54,7 +54,7 @@ namespace SimpleScheduler
                     _log.Info(
                         $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.TimeSchedule}.");
 
-                    _mainThread = new Thread(jobInfo.ExecuteJob);
+                    _mainThread = new Thread(jobInfo.InitializeSchedule);
 
                     if (!_mainThread.IsAlive)
                     {

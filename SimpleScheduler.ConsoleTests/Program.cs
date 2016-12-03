@@ -18,7 +18,7 @@ namespace SimpleScheduler.ConsoleTests
             _log.Info($"Running as {WindowsIdentity.GetCurrent().Name}");
 
             var jobManager = new JobManager();
-            jobManager.ExecuteAllJobs();
+            jobManager.InitializeAllJobSchedules();
         }
     }
 }
