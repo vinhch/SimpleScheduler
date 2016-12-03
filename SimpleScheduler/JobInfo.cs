@@ -61,7 +61,7 @@ namespace SimpleScheduler
                 && testType.GetInterface(nameof(IJob)) != null;
         }
 
-        private IJob _instanceJob;
+        private IJob _jobInstance;
 
         public void ExecuteJob()
         {
@@ -75,8 +75,8 @@ namespace SimpleScheduler
                 return;
             }
 
-            if (_instanceJob == null)
-                _instanceJob = Activator.CreateInstance(GetJobObjectType()) as IJob;
+            if (_jobInstance == null)
+                _jobInstance = Activator.CreateInstance(GetJobObjectType()) as IJob;
 
             if (Repeatable)
             {
@@ -86,7 +86,7 @@ namespace SimpleScheduler
 
                     try
                     {
-                        _instanceJob.Execute();
+                        _jobInstance.Execute();
                     }
                     catch (Exception ex)
                     {
@@ -106,7 +106,7 @@ namespace SimpleScheduler
             {
                 try
                 {
-                    _instanceJob.Execute();
+                    _jobInstance.Execute();
                 }
                 catch (Exception ex)
                 {
