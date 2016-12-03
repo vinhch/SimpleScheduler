@@ -21,7 +21,7 @@ namespace SimpleScheduler
 
         public bool Enabled { get; private set; }
 
-        public bool LogEnabled { get; private set; }
+        public bool LogEnabled { get; }
 
         public bool Repeatable { get; } = true;
 
@@ -29,11 +29,31 @@ namespace SimpleScheduler
 
         public int RepetitionIntervalTime { get; }
 
-        public string JobType { get; }
+        public string TimeSchedule { get; } = "None";
+
+        private DateTime? _timeSchedule;
+
+        private DateTime? GetTimeSchedule(DateTime now)
+        {
+            if (_timeSchedule == null)
+            {
+                if (string.IsNullOrWhiteSpace(TimeSchedule)) return null;
+
+                DateTime time;
+                if (!DateTime.TryParse(TimeSchedule, out time)) return null;
+
+                _timeSchedule = time;
+            }
+
+            return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour, _timeSchedule.Value.Minute,
+                _timeSchedule.Value.Second);
+        }
+
+        private string JobType { get; }
 
         private Type _objectType;
 
-        public Type GetJobObjectType()
+        private Type GetJobObjectType()
         {
             if (_objectType != null) return _objectType;
 
@@ -82,11 +102,28 @@ namespace SimpleScheduler
             {
                 while (true)
                 {
-                    Log.Info($"Start job \"{Name}\".");
+                    var now = DateTime.Now;
+                    var repetitionIntervalTime = RepetitionIntervalTime;
 
                     try
                     {
-                        _jobInstance.Execute();
+                        var timeSchedule = GetTimeSchedule(now);
+                        if (timeSchedule == null)
+                        {
+                            Log.Info($"Start job \"{Name}\".");
+                            _jobInstance.Execute();
+                        }
+                        else
+                        {
+                            if (repetitionIntervalTime < 1) repetitionIntervalTime = 1;
+
+                            var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
+                            if (0 <= difference.TotalSeconds && difference.TotalSeconds < repetitionIntervalTime)
+                            {
+                                Log.Info($"Start job \"{Name}\".");
+                                _jobInstance.Execute();
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -99,7 +136,7 @@ namespace SimpleScheduler
                         Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
                     }
 
-                    Thread.Sleep(RepetitionIntervalTime * 1000);
+                    Thread.Sleep(repetitionIntervalTime * 1000);
                 }
             }
             else
@@ -118,10 +155,11 @@ namespace SimpleScheduler
         public JobInfo() { }
 
         public JobInfo(string name, bool enabled, bool logEnabled, bool repeatable,
-            bool stopOnError, int repetitionIntervalTime, string jobType)
+            bool stopOnError, int repetitionIntervalTime, string timeSchedule, string jobType)
         {
             if (!string.IsNullOrWhiteSpace(name)) Name = name;
             if (repetitionIntervalTime > 0) RepetitionIntervalTime = repetitionIntervalTime;
+            if (!string.IsNullOrWhiteSpace(timeSchedule)) TimeSchedule = timeSchedule;
 
             Enabled = enabled;
             LogEnabled = logEnabled;

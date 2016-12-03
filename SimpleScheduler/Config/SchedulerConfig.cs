@@ -35,7 +35,7 @@ namespace SimpleScheduler
     [DesignerCategory("code")]
     [XmlType(AnonymousType = true)]
     [XmlRoot("jobs", Namespace = "", IsNullable = false)]
-    public partial class SchedulerConfigJobs
+    public class SchedulerConfigJobs
     {
 
         private SchedulerConfigJob[] jobField;
@@ -46,11 +46,11 @@ namespace SimpleScheduler
         {
             get
             {
-                return this.jobField;
+                return jobField;
             }
             set
             {
-                this.jobField = value;
+                jobField = value;
             }
         }
     }
@@ -74,6 +74,8 @@ namespace SimpleScheduler
         private bool loggingField;
 
         private int secondsField;
+
+        private string scheduleField;
 
         /// <remarks/>
         [XmlAttribute("name")]
@@ -156,6 +158,20 @@ namespace SimpleScheduler
             set
             {
                 secondsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [XmlAttribute("schedule")]
+        public string Schedule
+        {
+            get
+            {
+                return scheduleField;
+            }
+            set
+            {
+                scheduleField = value;
             }
         }
     }

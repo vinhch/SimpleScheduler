@@ -12,7 +12,7 @@ namespace SimpleScheduler
     {
         private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
-        private IEnumerable<JobInfo> _listOfJobInfo;
+        private readonly IEnumerable<JobInfo> _listOfJobInfo;
 
         private Thread _mainThread;
 
@@ -27,7 +27,8 @@ namespace SimpleScheduler
                     configSection.Jobs.Select(
                         jobConfig =>
                             new JobInfo(jobConfig.Name, jobConfig.Enabled, jobConfig.Logging, true,
-                                jobConfig.StopOnError, jobConfig.Seconds, jobConfig.Type));
+                                jobConfig.StopOnError, jobConfig.Seconds, jobConfig.Schedule,
+                                jobConfig.Type));
 
             }
         }
@@ -50,7 +51,8 @@ namespace SimpleScheduler
             {
                 try
                 {
-                    _log.Info($"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s.");
+                    _log.Info(
+                        $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.TimeSchedule}.");
 
                     _mainThread = new Thread(jobInfo.ExecuteJob);
 
