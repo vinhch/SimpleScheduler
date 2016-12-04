@@ -52,7 +52,7 @@ namespace SimpleScheduler
                 try
                 {
                     _log.Info(
-                        $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.TimeSchedule}.");
+                        $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.Schedule}.");
 
                     _mainThread = new Thread(jobInfo.InitializeSchedule);
 

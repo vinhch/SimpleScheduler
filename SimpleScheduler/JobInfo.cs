@@ -6,6 +6,8 @@ namespace SimpleScheduler
 {
     public class JobInfo
     {
+        private const string NONE = "None";
+
         private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
         private ILog Log
@@ -17,7 +19,7 @@ namespace SimpleScheduler
             }
         }
 
-        public string Name { get; } = "Unknow";
+        public string Name { get; } = NONE;
 
         public bool Enabled { get; private set; }
 
@@ -29,26 +31,31 @@ namespace SimpleScheduler
 
         public int RepetitionIntervalTime { get; private set; }
 
-        public string TimeSchedule { get; } = "None";
+        public string Schedule { get; } = NONE;
 
         private DateTime? _timeSchedule;
 
-        private DateTime? GetTimeSchedule(DateTime now)
+        private TimeSchedule GetTimeSchedule()
         {
-            if (string.IsNullOrWhiteSpace(TimeSchedule)) return null;
+            if (Schedule == NONE || string.IsNullOrWhiteSpace(Schedule)) return null;
 
-            if (_timeSchedule != null)
-                return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour,
-                    _timeSchedule.Value.Minute, _timeSchedule.Value.Second);
+            if (_timeSchedule == null)
+            {
+                DateTime time;
+                if (!DateTime.TryParse(Schedule, out time)) return null;
 
-            DateTime time;
-            if (!DateTime.TryParse(TimeSchedule, out time)) return null;
+                _timeSchedule = time;
+                if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1;
+            }
 
-            _timeSchedule = time;
-            if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1;
-
-            return new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour,
-                _timeSchedule.Value.Minute, _timeSchedule.Value.Second);
+            var now = DateTime.Now;
+            return new TimeSchedule
+            {
+                TimeNow = now,
+                Value =
+                    new DateTime(now.Year, now.Month, now.Day, _timeSchedule.Value.Hour, _timeSchedule.Value.Minute,
+                        _timeSchedule.Value.Second)
+            };
         }
 
         private string JobType { get; }
@@ -101,16 +108,14 @@ namespace SimpleScheduler
 
             while (Repeatable)
             {
-                var now = DateTime.Now;
-
-                var timeSchedule = GetTimeSchedule(now);
+                var timeSchedule = GetTimeSchedule();
                 if (timeSchedule == null)
                 {
                     if (!ExecuteJobAndContinue()) return;
                 }
                 else
                 {
-                    var difference = now.TimeOfDay - timeSchedule.Value.TimeOfDay;
+                    var difference = timeSchedule.TimeNow.TimeOfDay - timeSchedule.Value.TimeOfDay;
 
                     if (0 <= difference.TotalSeconds && difference.TotalSeconds < RepetitionIntervalTime)
                     {
@@ -153,7 +158,7 @@ namespace SimpleScheduler
         {
             if (!string.IsNullOrWhiteSpace(name)) Name = name;
             if (repetitionIntervalTime > 0) RepetitionIntervalTime = repetitionIntervalTime;
-            if (!string.IsNullOrWhiteSpace(timeSchedule)) TimeSchedule = timeSchedule;
+            if (!string.IsNullOrWhiteSpace(timeSchedule)) Schedule = timeSchedule;
 
             Enabled = enabled;
             LogEnabled = logEnabled;
