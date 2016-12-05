@@ -8,6 +8,7 @@ namespace SimpleScheduler
     public class NullLog : ILog
     {
         private static NullLog _nullLogInstance;
+
         public static NullLog GetNullLog()
         {
             if (_nullLogInstance == null)
