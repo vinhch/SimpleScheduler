@@ -45,15 +45,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\Constants.cs" />
-    <Compile Include="Config\NullLog.cs" />
+    <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\NullLog.cs" />
     <Compile Include="JobInfo.cs" />
     <Compile Include="IJob.cs" />
     <Compile Include="JobManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Config\SchedulerConfig.cs" />
-    <Compile Include="Config\SchedulerConfigSection.cs" />
-    <Compile Include="Config\TimeSchedule.cs" />
+    <Compile Include="Helper\SchedulerConfig.cs" />
+    <Compile Include="Helper\SchedulerConfigSection.cs" />
+    <Compile Include="Helper\TimeSchedule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
