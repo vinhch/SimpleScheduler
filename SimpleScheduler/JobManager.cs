@@ -42,24 +42,17 @@ namespace SimpleScheduler
         {
             _log.Debug("Begin Scheduler");
 
-            if (_listOfJobInfo == null || !_listOfJobInfo.Any())
-            {
-                return;
-            }
+            if (_listOfJobInfo == null || !_listOfJobInfo.Any()) return;
 
             Parallel.ForEach(_listOfJobInfo.Where(s => s.Enabled), jobInfo =>
             {
+                _log.Info(
+                        $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.Schedule}.");
                 try
                 {
-                    _log.Info(
-                        $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.Schedule}.");
-
                     _mainThread = new Thread(jobInfo.InitializeSchedule);
-
-                    if (!_mainThread.IsAlive)
-                    {
-                        _mainThread.Start();
-                    }
+                    if (_mainThread.IsAlive) return;
+                    _mainThread.Start();
                 }
                 catch (Exception ex)
                 {

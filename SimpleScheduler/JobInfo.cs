@@ -31,7 +31,7 @@ namespace SimpleScheduler
 
         public int RepetitionIntervalTime { get; private set; }
 
-        public string Schedule { get; } = NONE;
+        public string Schedule { get; private set; } = NONE;
 
         private DateTime? _timeSchedule;
 
@@ -42,7 +42,11 @@ namespace SimpleScheduler
             if (_timeSchedule == null)
             {
                 DateTime time;
-                if (!DateTime.TryParse(Schedule, out time)) return null;
+                if (!DateTime.TryParse(Schedule, out time))
+                {
+                    Schedule = NONE;
+                    return null;
+                }
 
                 _timeSchedule = time;
                 if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1;
@@ -132,9 +136,10 @@ namespace SimpleScheduler
 
         private bool ExecuteJobAndContinue()
         {
+            Log.Info($"Start job \"{Name}\".");
+
             try
             {
-                Log.Info($"Start job \"{Name}\".");
                 _jobInstance.Execute();
             }
             catch (Exception ex)
