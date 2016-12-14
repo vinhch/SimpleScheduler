@@ -12,7 +12,7 @@ namespace SimpleScheduler
     {
         private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
 
-        private readonly IEnumerable<JobInfo> _listOfJobInfo;
+        private readonly IEnumerable<IJobInfo> _listOfJobInfo;
 
         private Thread _mainThread;
 
@@ -33,7 +33,7 @@ namespace SimpleScheduler
             }
         }
 
-        public JobManager(IEnumerable<JobInfo> listOfJobInfo)
+        public JobManager(IEnumerable<IJobInfo> listOfJobInfo)
         {
             if (listOfJobInfo != null) _listOfJobInfo = listOfJobInfo;
         }

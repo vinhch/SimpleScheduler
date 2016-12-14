@@ -4,7 +4,7 @@ using log4net;
 
 namespace SimpleScheduler
 {
-    public class JobInfo
+    public class JobInfo : IJobInfo
     {
         private const string NONE = "None";
 
