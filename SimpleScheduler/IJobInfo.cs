@@ -15,6 +15,6 @@ namespace SimpleScheduler
         bool StopOnError { get; }
         int RepetitionIntervalTime { get; }
         string Schedule { get; }
-        void InitializeSchedule();
+        Task InitializeSchedule();
     }
 }

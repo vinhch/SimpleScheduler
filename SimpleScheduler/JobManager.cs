@@ -14,7 +14,8 @@ namespace SimpleScheduler
 
         private readonly IEnumerable<IJobInfo> _listOfJobInfo;
 
-        private Thread _mainThread;
+        //private Thread _mainThread;
+        private IList<Task> tasks = new List<Task>();
 
         public JobManager()
         {
@@ -50,15 +51,22 @@ namespace SimpleScheduler
                         $"Instantiating job \"{jobInfo.Name}\", LogEnabled: {jobInfo.LogEnabled}, Repeatable: {jobInfo.Repeatable}, StopOnError: {jobInfo.StopOnError}, RepetitionIntervalTime: {jobInfo.RepetitionIntervalTime}s, TimeSchedule: {jobInfo.Schedule}.");
                 try
                 {
-                    _mainThread = new Thread(jobInfo.InitializeSchedule);
-                    if (_mainThread.IsAlive) return;
-                    _mainThread.Start();
+                    //_mainThread = new Thread(jobInfo.InitializeSchedule);
+                    //if (_mainThread.IsAlive) return;
+                    //_mainThread.Start();
+                    //await jobInfo.InitializeSchedule();
+
+                    var task = jobInfo.InitializeSchedule();
+                    tasks.Add(task);
+                    //task.Start();
                 }
                 catch (Exception ex)
                 {
                     _log.Error($"Job \"{jobInfo.Name}\" could not be instantiated or executed.", ex);
                 }
             });
+
+            Task.WaitAll(tasks.ToArray());
 
             _log.Debug("End Scheduler");
         }

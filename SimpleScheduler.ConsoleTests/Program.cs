@@ -1,4 +1,5 @@
 ﻿using log4net;
+using System;
 using System.Security.Principal;
 
 namespace SimpleScheduler.ConsoleTests
@@ -14,6 +15,8 @@ namespace SimpleScheduler.ConsoleTests
 
             var jobManager = new JobManager();
             jobManager.InitializeAllJobSchedules();
+
+            //Console.ReadLine();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using log4net;
+using System.Threading.Tasks;
 
 namespace SimpleScheduler
 {
@@ -96,7 +97,7 @@ namespace SimpleScheduler
 
         private IJob _jobInstance;
 
-        public void InitializeSchedule()
+        public async Task InitializeSchedule()
         {
             if (!Enabled) return;
 
@@ -115,7 +116,7 @@ namespace SimpleScheduler
                 var timeSchedule = GetTimeSchedule();
                 if (timeSchedule == null)
                 {
-                    if (!ExecuteJobAndContinue()) return;
+                    if (!await ExecuteJobAndContinue()) return;
                 }
                 else
                 {
@@ -123,24 +124,25 @@ namespace SimpleScheduler
 
                     if (0 <= difference.TotalSeconds && difference.TotalSeconds < RepetitionIntervalTime)
                     {
-                        if (!ExecuteJobAndContinue()) return;
+                        if (!await ExecuteJobAndContinue()) return;
                     }
                 }
 
-                Thread.Sleep(RepetitionIntervalTime * 1000);
+                //Thread.Sleep(RepetitionIntervalTime * 1000);
+                await Task.Delay(RepetitionIntervalTime * 1000);
             }
 
             // else !Repeatable
-            ExecuteJobAndContinue();
+            await ExecuteJobAndContinue();
         }
 
-        private bool ExecuteJobAndContinue()
+        private async Task<bool> ExecuteJobAndContinue()
         {
             Log.Info($"Start job \"{Name}\".");
 
             try
             {
-                _jobInstance.Execute();
+                await _jobInstance.Execute();
             }
             catch (Exception ex)
             {
