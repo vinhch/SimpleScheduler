@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Threading;
-using log4net;
 using System.Threading.Tasks;
 
 namespace SimpleScheduler
@@ -8,17 +6,6 @@ namespace SimpleScheduler
     public class JobInfo : IJobInfo
     {
         private const string NONE = "None";
-
-        private readonly ILog _log = LogManager.GetLogger(Constants.SCHEDULER_LOGGER);
-
-        private ILog Log
-        {
-            get
-            {
-                if (LogEnabled) return _log;
-                return NullLog.GetNullLog();
-            }
-        }
 
         public string Name { get; } = NONE;
 
@@ -104,7 +91,6 @@ namespace SimpleScheduler
             var type = GetJobObjectType();
             if (type == null)
             {
-                Log.Error($"Job \"{Name}\" cannot be instantiated.");
                 return;
             }
 
@@ -138,23 +124,17 @@ namespace SimpleScheduler
 
         private async Task<bool> ExecuteJobAndContinue()
         {
-            Log.Info($"Start job \"{Name}\".");
-
             try
             {
                 await _jobInstance.Execute();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (StopOnError)
                 {
-                    Log.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                     return false;
                 }
-
-                Log.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
             }
-
             return true;
         }
 
