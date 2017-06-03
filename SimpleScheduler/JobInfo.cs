@@ -7,6 +7,20 @@ namespace SimpleScheduler
     {
         private const string NONE = "None";
 
+        private IDefaultLog _log;
+
+        public IDefaultLog Log
+        {
+            get
+            {
+                return LogEnabled ? _log : null;
+            }
+            set
+            {
+                _log = value;
+            }
+        }
+
         public string Name { get; } = NONE;
 
         public bool Enabled { get; private set; }
@@ -91,6 +105,7 @@ namespace SimpleScheduler
             var type = GetJobObjectType();
             if (type == null)
             {
+                Log?.Error($"Job \"{Name}\" cannot be instantiated.");
                 return;
             }
 
@@ -124,16 +139,20 @@ namespace SimpleScheduler
 
         private async Task<bool> ExecuteJobAndContinue()
         {
+            Log?.Info($"Start job \"{Name}\".");
+
             try
             {
                 await _jobInstance.Execute();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 if (StopOnError)
                 {
+                    Log?.Error($"Job \"{Name}\" could not be executed, throwing an exception and stopped.", ex);
                     return false;
                 }
+                Log?.Error($"Job \"{Name}\" could not be executed, throwing an exception.", ex);
             }
             return true;
         }
