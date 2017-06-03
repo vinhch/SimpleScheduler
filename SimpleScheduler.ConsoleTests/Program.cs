@@ -1,15 +1,14 @@
 ﻿using log4net;
-using System;
 using System.Security.Principal;
 
 namespace SimpleScheduler.ConsoleTests
 {
-    class Program
+    public class Program
     {
         private static readonly ILog _log =
             LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             _log.Info($"Running as {WindowsIdentity.GetCurrent().Name}");
 
