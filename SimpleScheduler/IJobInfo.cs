@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace SimpleScheduler
 {
@@ -15,6 +11,6 @@ namespace SimpleScheduler
         bool StopOnError { get; }
         int RepetitionIntervalTime { get; }
         string Schedule { get; }
-        void InitializeSchedule();
+        Task InitializeSchedule();
     }
 }

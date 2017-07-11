@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace SimpleScheduler.Jobs
 {
     public class Test1 : IJob
     {
-        public void Execute()
+        public async Task Execute()
         {
             Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff")} Job \"{GetType().Name}\" is executed.");
         }

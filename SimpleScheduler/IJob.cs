@@ -1,7 +1,9 @@
-﻿namespace SimpleScheduler
+﻿using System.Threading.Tasks;
+
+namespace SimpleScheduler
 {
     public interface IJob
     {
-        void Execute();
+        Task Execute();
     }
 }
