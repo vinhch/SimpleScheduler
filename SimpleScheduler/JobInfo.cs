@@ -31,8 +31,15 @@ namespace SimpleScheduler
 
         public bool StopOnError { get; } = true;
 
+        /// <summary>
+        /// Time wait after each job task run
+        /// If job has Schedule time, then minimum RepetitionIntervalTime is 1ms
+        /// </summary>
         public int RepetitionIntervalTime { get; private set; }
 
+        /// <summary>
+        /// Schedule time
+        /// </summary>
         public string Schedule { get; private set; } = NONE;
 
         private DateTime? _timeSchedule;
@@ -51,7 +58,7 @@ namespace SimpleScheduler
                 }
 
                 _timeSchedule = time;
-                if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1;
+                if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1; // If job has Schedule time, then minimum RepetitionIntervalTime is 1ms
             }
 
             var now = DateTime.Now;
@@ -129,8 +136,11 @@ namespace SimpleScheduler
                     }
                 }
 
-                //Thread.Sleep(RepetitionIntervalTime * 1000);
-                await Task.Delay(RepetitionIntervalTime * 1000);
+                if (RepetitionIntervalTime > 0)
+                {
+                    //Thread.Sleep(RepetitionIntervalTime * 1000);
+                    await Task.Delay(RepetitionIntervalTime * 1000);
+                }
             }
 
             // else !Repeatable
