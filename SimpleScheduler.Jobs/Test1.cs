@@ -7,7 +7,7 @@ namespace SimpleScheduler.Jobs
     {
         public async Task Execute()
         {
-            Console.WriteLine($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss,fff")} Job \"{GetType().Name}\" is executed.");
+            Console.WriteLine($"{DateTime.Now:yyyy-MM-dd HH:mm:ss,fff} Job \"{GetType().Name}\" is executed.");
         }
     }
 }

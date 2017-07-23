@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -8,10 +9,10 @@ namespace SimpleScheduler
 {
     public class JobManager
     {
-        private readonly IEnumerable<IJobInfo> _listOfJobInfo;
+        private readonly ConcurrentBag<IJobInfo> _listOfJobInfo;
 
         //private Thread _mainThread;
-        private IList<Task> tasks = new List<Task>();
+        private readonly IList<Task> _tasks = new List<Task>();
 
         public IDefaultLog Log { get; set; }
 
@@ -22,7 +23,7 @@ namespace SimpleScheduler
             var configSection = schedulerConfigSection as SchedulerConfigSection;
             if (configSection != null)
             {
-                _listOfJobInfo = configSection.Jobs.Select(jobConfig =>
+                _listOfJobInfo = new ConcurrentBag<IJobInfo>(configSection.Jobs.Select(jobConfig =>
                 {
                     var jobInfo = new JobInfo(jobConfig.Name, jobConfig.Enabled, jobConfig.Logging, true,
                         jobConfig.StopOnError, jobConfig.Seconds, jobConfig.Schedule,
@@ -30,13 +31,13 @@ namespace SimpleScheduler
                     jobInfo.Log = Log;
 
                     return jobInfo;
-                });
+                }));
             }
         }
 
         public JobManager(IEnumerable<IJobInfo> listOfJobInfo)
         {
-            if (listOfJobInfo != null) _listOfJobInfo = listOfJobInfo;
+            if (listOfJobInfo != null) _listOfJobInfo = new ConcurrentBag<IJobInfo>(listOfJobInfo);
         }
 
         public void InitializeAllJobSchedules()
@@ -57,7 +58,7 @@ namespace SimpleScheduler
                 try
                 {
                     var task = jobInfo.InitializeSchedule();
-                    tasks.Add(task);
+                    _tasks.Add(task);
                     //task.Start();
                 }
                 catch (Exception ex)
@@ -66,7 +67,7 @@ namespace SimpleScheduler
                 }
             });
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(_tasks.ToArray());
         }
     }
 }
