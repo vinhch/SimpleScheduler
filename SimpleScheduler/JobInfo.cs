@@ -42,7 +42,7 @@ namespace SimpleScheduler
         /// </summary>
         public string Schedule { get; private set; } = NONE;
 
-        private DateTime? _timeSchedule;
+        private DateTimeOffset? _timeSchedule;
 
         private TimeSchedule GetTimeSchedule()
         {
@@ -50,8 +50,7 @@ namespace SimpleScheduler
 
             if (_timeSchedule == null)
             {
-                DateTime time;
-                if (!DateTime.TryParse(Schedule, out time))
+                if (!DateTimeOffset.TryParse(Schedule, out DateTimeOffset time))
                 {
                     Schedule = NONE;
                     return null;
@@ -61,7 +60,7 @@ namespace SimpleScheduler
                 if (RepetitionIntervalTime < 1) RepetitionIntervalTime = 1; // If job has Schedule time, then minimum RepetitionIntervalTime is 1ms
             }
 
-            var now = DateTime.Now;
+            var now = DateTimeOffset.Now;
             return new TimeSchedule
             {
                 TimeNow = now,

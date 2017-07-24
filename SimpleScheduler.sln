@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler", "SimpleScheduler\SimpleScheduler.csproj", "{8DB4326D-6352-42BF-8776-B168B04904CA}"
 EndProject
@@ -10,6 +10,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler.ConsoleTests", "SimpleScheduler.ConsoleTests\SimpleScheduler.ConsoleTests.csproj", "{ADF63A6A-66BB-44F3-9AE7-8B113C4A6B23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScheduler.Tests", "SimpleScheduler.Tests\SimpleScheduler.Tests.csproj", "{BF3DF41F-CD7F-4A34-BF9D-AB00BC9B9299}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C9B8E27A-DF00-41CC-9FB7-06D0D32982A8}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
