@@ -70,6 +70,10 @@ namespace SimpleScheduler
             };
         }
 
+        public DateTimeOffset LastRunAt { get; private set; }
+
+        public bool IsSelfExecute { get; } = true; //TODO: create a pool for not self execute jobs (job without a loop to running itself)
+
         private string JobType { get; }
 
         private Type _objectType;

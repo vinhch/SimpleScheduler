@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace SimpleScheduler
 {
@@ -11,6 +12,8 @@ namespace SimpleScheduler
         bool StopOnError { get; }
         int RepetitionIntervalTime { get; }
         string Schedule { get; }
+        DateTimeOffset LastRunAt { get; }
+        bool IsSelfExecute { get; }
         Task InitializeSchedule();
     }
 }
